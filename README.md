@@ -1,6 +1,6 @@
 # Kvpbase Loadbalancer
 
-A simple high-availability loadbalancer written in C# using Watson.
+A simple high-availability HTTP and HTTPS loadbalancer written in C# using Watson.
 
 ![alt tag](https://github.com/maraudersoftware/LoadBalancer/blob/master/assets/diagram.png)
 
