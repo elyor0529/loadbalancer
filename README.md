@@ -15,7 +15,7 @@ Run the app with ```setup``` in the command line arguments to run the setup scri
 - The ```HeartbeatUrl``` for a Node must be a full URL including the protocol, i.e. http://10.1.1.1:80/loopback.  This URL must always return a 200 to indicate that the Node is online and available
 - The ```HandlingMode``` should either be ```proxy``` or ```redirect```.  In the case of proxy, the loadbalancer will submit a request on behalf of the requestor and marshal the response back to the requestor.  In the case of redirect, the loadbalancer will send an HTTP redirect according to the configuration
 - The ```LoadBalancingSchema``` should always be set to ```roundrobin``` (for now)
-
+ 
 ## Performance and Scale
 It is recommended that you use ```redirect``` for ```HandlingMode``` as this will unburden the loadbalancer from having to proxy each connection.
 
