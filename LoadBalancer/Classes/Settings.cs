@@ -8,8 +8,6 @@ namespace Kvpbase
         #region Public-Members
 
         public int EnableConsole;
-        public string BalanceScheme;        // currently only roundrobin
-        public int HeartbeatIntervalSec;
         public int RedirectStatusCode;
         public string RedirectStatusString;
 

@@ -54,8 +54,6 @@ namespace Kvpbase
             #region Initial-Settings
             
             ret.EnableConsole = 1;
-            ret.BalanceScheme = "roundrobin";
-            ret.HeartbeatIntervalSec = 5;
             ret.RedirectStatusCode = 302;
             ret.RedirectStatusString = "Moved Temporarily";
                  
