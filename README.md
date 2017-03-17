@@ -23,7 +23,6 @@ It is recommended that you use ```redirect``` for ```HandlingMode``` as this wil
 ```
 {
   "EnableConsole": 1,
-  "HeartbeatIntervalSec": 5,
   "RedirectStatusCode": 302,
   "RedirectStatusString": "Moved Temporarily",
   "Hosts": [
