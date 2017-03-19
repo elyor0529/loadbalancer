@@ -276,7 +276,7 @@ namespace Kvpbase
                 if (resp != null)
                 {
                     string message = "RequestHandler " + req.SourceIp + ":" + req.SourcePort + " " + req.Method + " " + req.RawUrlWithoutQuery;
-                    if (currNode != null) message += " " + hostKey + " to " + currNode.Hostname + ":" + currNode.Port;
+                    if (currNode != null) message += " " + hostKey + " to " + currNode.Hostname + ":" + currNode.Port + " " + currHost.HandlingMode;
                     message += " " + resp.StatusCode + " " + Common.TotalMsFrom(startTime) + "ms";
                     _Logging.Log(LoggingModule.Severity.Debug, message);
                 }
