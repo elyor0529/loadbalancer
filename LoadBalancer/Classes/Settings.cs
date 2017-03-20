@@ -13,6 +13,7 @@ namespace Kvpbase
 
         public List<Host> Hosts;
         public SettingsServer Server;
+        public SettingsAuth Auth;
         public SettingsLogging Syslog;
         public SettingsRest Rest;
 
@@ -48,6 +49,12 @@ namespace Kvpbase
         #endregion
     }
       
+    public class SettingsAuth
+    {
+        public string AdminApiKeyHeader;
+        public string AdminApiKey;
+    }
+
     public class SettingsLogging
     {
         #region Public-Members

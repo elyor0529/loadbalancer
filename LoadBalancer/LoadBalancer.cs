@@ -119,7 +119,7 @@ namespace Kvpbase
 
             try
             {
-                #region Internal-APIs
+                #region Unauthenticated-APIs
 
                 switch (req.Method.ToLower())
                 {
@@ -144,6 +144,65 @@ namespace Kvpbase
 
                 _Connections.Add(Thread.CurrentThread.ManagedThreadId, req);
                 connAdded = true;
+
+                #endregion
+
+                #region Authenticate-and-Admin-APIs
+
+                if (req.Headers.ContainsKey(_Settings.Auth.AdminApiKeyHeader))
+                {
+                    if (req.RetrieveHeaderValue(_Settings.Auth.AdminApiKeyHeader).Equals(_Settings.Auth.AdminApiKey))
+                    {
+                        #region Admin-APIs
+
+                        _Logging.Log(LoggingModule.Severity.Info, "RequestHandler use of admin API key detected");
+
+                        switch (req.Method.ToLower())
+                        {
+                            case "get":
+                                if (WatsonCommon.UrlEqual(req.RawUrlWithoutQuery, "/_loadbalancer/connections", false))
+                                {
+                                    resp = new HttpResponse(req, true, 200, null, "application/json", _Connections.GetActiveConnections(), false);
+                                    return resp;
+                                }
+
+                                if (WatsonCommon.UrlEqual(req.RawUrlWithoutQuery, "/_loadbalancer/config", false))
+                                {
+                                    resp = new HttpResponse(req, true, 200, null, "application/json", _Settings, false);
+                                    return resp;
+                                }
+
+                                if (WatsonCommon.UrlEqual(req.RawUrlWithoutQuery, "/_loadbalancer/hosts", false))
+                                {
+                                    resp = new HttpResponse(req, true, 200, null, "application/json", _Hosts.Get(), false);
+                                    return resp;
+                                }
+                                break;
+                                
+                            case "put":
+                            case "post":
+                            case "delete":
+                            default:
+                                break;
+                        }
+
+                        _Logging.Log(LoggingModule.Severity.Warn, "RequestHandler unknown admin API endpoint: " + req.RawUrlWithoutQuery);
+                        resp = new HttpResponse(req, false, 400, null, "application/json", "Unknown API endpoint or verb", false);
+                        return resp;
+
+                        #endregion
+                    }
+                    else
+                    {
+                        #region Failed-Auth
+
+                        _Logging.Log(LoggingModule.Severity.Warn, "RequestHandler invalid admin API key supplied: " + req.RetrieveHeaderValue(_Settings.Auth.AdminApiKeyHeader));
+                        resp = new HttpResponse(req, false, 401, null, "application/json", "Authentication failed", false);
+                        return resp;
+
+                        #endregion
+                    }
+                }
 
                 #endregion
 

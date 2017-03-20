@@ -76,7 +76,15 @@ namespace Kvpbase
             Console.WriteLine("");
 
             #endregion
-            
+
+            #region Auth
+
+            ret.Auth = new SettingsAuth();
+            ret.Auth.AdminApiKeyHeader = "x-api-key";
+            ret.Auth.AdminApiKey = "admin";
+
+            #endregion
+
             #region Syslog
 
             ret.Syslog = new SettingsLogging();
