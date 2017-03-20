@@ -149,13 +149,13 @@ namespace Kvpbase
 
                 #region Authenticate-and-Admin-APIs
 
-                if (req.Headers.ContainsKey(_Settings.Auth.AdminApiKeyHeader))
-                {
+                if (!String.IsNullOrEmpty(req.RetrieveHeaderValue(_Settings.Auth.AdminApiKeyHeader)))
+                { 
                     if (req.RetrieveHeaderValue(_Settings.Auth.AdminApiKeyHeader).Equals(_Settings.Auth.AdminApiKey))
                     {
                         #region Admin-APIs
 
-                        _Logging.Log(LoggingModule.Severity.Info, "RequestHandler use of admin API key detected");
+                        _Logging.Log(LoggingModule.Severity.Info, "RequestHandler use of admin API key detected for: " + req.RawUrlWithoutQuery);
 
                         switch (req.Method.ToLower())
                         {
