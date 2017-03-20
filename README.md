@@ -63,6 +63,10 @@ It is recommended that you use ```redirect``` for ```HandlingMode``` as this wil
     "Port": 9000,
     "Ssl": 0
   },
+  "Auth": {
+    "AdminApiKeyHeader": "x-api-key",
+    "AdminApiKey": "admin"
+  },
   "Syslog": {
     "SyslogServerIp": "127.0.0.1",
     "SyslogServerPort": 514,
@@ -78,6 +82,14 @@ It is recommended that you use ```redirect``` for ```HandlingMode``` as this wil
   }
 }
 
+```
+
+## Admin APIs
+Using the admin API key, a set of RESTful APIs can be used to gather visibility into the loadbalancer during runtime.  The admin API key header defined in the ```Auth``` section of the config can be included as a header or as a querystring key-value pair.
+```
+GET /_loadbalancer/config?x-api-key=admin
+GET /_loadbalancer/connections?x-api-key=admin
+GET /_loadbalancer/hosts?x-api-key=admin
 ```
 
 ## Running under Mono
