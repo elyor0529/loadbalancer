@@ -51,8 +51,12 @@ namespace Kvpbase
       
     public class SettingsAuth
     {
+        #region Public-Members
+
         public string AdminApiKeyHeader;
         public string AdminApiKey;
+
+        #endregion
     }
 
     public class SettingsLogging
