@@ -13,8 +13,8 @@ Run the app with ```setup``` in the command line arguments to run the setup scri
 - Nodes are polled at an interval according to their configuration, and removed from rotation when the maximum number of failures are reached
 - Node polling continuse while a node is failed to detect return-to-service conditions
 - The ```HeartbeatUrl``` for a Node must be a full URL including the protocol, i.e. http://10.1.1.1:80/loopback.  This URL must always return a 200 to indicate that the Node is online and available
-- The ```HandlingMode``` should either be ```proxy``` or ```redirect```.  In the case of proxy, the loadbalancer will submit a request on behalf of the requestor and marshal the response back to the requestor.  In the case of redirect, the loadbalancer will send an HTTP redirect according to the configuration
-- The ```LoadBalancingSchema``` should always be set to ```roundrobin``` (for now)
+- The ```HandlingMode``` should either be ```Proxy``` or ```Redirect```.  In the case of proxy, the loadbalancer will submit a request on behalf of the requestor and marshal the response back to the requestor.  In the case of redirect, the loadbalancer will send an HTTP redirect according to the configuration
+- The ```BalancingScheme``` should always be set to ```RoundRobin``` (for now)
  
 ## Performance and Scale
 It is recommended that you use ```redirect``` for ```HandlingMode``` as this will unburden the loadbalancer from having to proxy each connection.
@@ -22,7 +22,7 @@ It is recommended that you use ```redirect``` for ```HandlingMode``` as this wil
 ## Sample Configuration
 ```
 {
-  "EnableConsole": 1,
+  "EnableConsole": true,
   "RedirectStatusCode": 302,
   "RedirectStatusString": "Moved Temporarily",
   "Hosts": [
@@ -45,7 +45,7 @@ It is recommended that you use ```redirect``` for ```HandlingMode``` as this wil
         {
           "Hostname": "10.1.1.2",
           "Port": 80,
-          "Ssl": 0,
+          "Ssl": false,
           "HeartbeatUrl": "http://10.1.1.2:80/loopback",
           "PollingIntervalMsec": 2500,
           "MaxFailures": 4,
@@ -53,15 +53,15 @@ It is recommended that you use ```redirect``` for ```HandlingMode``` as this wil
         }
       ],
       "LastIndex": 0,
-      "LoadBalancingSchema": "roundrobin",
-      "HandlingMode": "redirect",
-      "AcceptInvalidCerts": 1
+      "BalancingScheme": "RoundRobin",
+      "HandlingMode": "Redirect",
+      "AcceptInvalidCerts": true
     }
   ],
   "Server": {
     "DnsHostname": "+",
     "Port": 9000,
-    "Ssl": 0
+    "Ssl": false
   },
   "Auth": {
     "AdminApiKeyHeader": "x-api-key",
@@ -71,14 +71,14 @@ It is recommended that you use ```redirect``` for ```HandlingMode``` as this wil
     "SyslogServerIp": "127.0.0.1",
     "SyslogServerPort": 514,
     "MinimumSeverityLevel": 1,
-    "LogRequests": 0,
-    "LogResponses": 0,
-    "ConsoleLogging": 1
+    "LogRequests": false,
+    "LogResponses": false,
+    "ConsoleLogging": true
   },
   "Rest": {
-    "UseWebProxy": 0,
+    "UseWebProxy": false,
     "WebProxyUrl": "",
-    "AcceptInvalidCerts": 1
+    "AcceptInvalidCerts": true
   }
 }
 

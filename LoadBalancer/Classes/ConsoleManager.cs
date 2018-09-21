@@ -138,8 +138,8 @@ namespace Kvpbase
                         Console.WriteLine("    HTTP host names: (null)");
                     }
 
-                    Console.WriteLine("    Balancing schema: " + currHost.LoadBalancingSchema);
-                    Console.WriteLine("    Handling mode: " + currHost.HandlingMode);
+                    Console.WriteLine("    Balancing scheme: " + currHost.BalancingScheme.ToString());
+                    Console.WriteLine("    Handling mode: " + currHost.HandlingMode.ToString());
 
                     if (currHost.Nodes != null && currHost.Nodes.Count > 0)
                     {

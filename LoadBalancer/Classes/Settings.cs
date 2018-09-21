@@ -7,7 +7,7 @@ namespace Kvpbase
     {
         #region Public-Members
 
-        public int EnableConsole;
+        public bool EnableConsole;
         public int RedirectStatusCode;
         public string RedirectStatusString;
 
@@ -44,7 +44,7 @@ namespace Kvpbase
 
         public string DnsHostname;
         public int Port;
-        public int Ssl;
+        public bool Ssl;
         
         #endregion
     }
@@ -66,9 +66,9 @@ namespace Kvpbase
         public string SyslogServerIp;
         public int SyslogServerPort;
         public int MinimumSeverityLevel;
-        public int LogRequests;
-        public int LogResponses;
-        public int ConsoleLogging;
+        public bool LogRequests;
+        public bool LogResponses;
+        public bool ConsoleLogging;
 
         #endregion
     }
@@ -77,9 +77,9 @@ namespace Kvpbase
     {
         #region Public-Members
 
-        public int UseWebProxy;
+        public bool UseWebProxy;
+        public bool AcceptInvalidCerts;
         public string WebProxyUrl;
-        public int AcceptInvalidCerts;
 
         #endregion
     }

@@ -53,7 +53,7 @@ namespace Kvpbase
 
             #region Initial-Settings
             
-            ret.EnableConsole = 1;
+            ret.EnableConsole = true;
             ret.RedirectStatusCode = 302;
             ret.RedirectStatusString = "Moved Temporarily";
                  
@@ -62,7 +62,7 @@ namespace Kvpbase
             #region Server
 
             ret.Server = new SettingsServer();
-            ret.Server.Ssl = 0;
+            ret.Server.Ssl = false;
             ret.Server.Port = Common.InputInteger("On which TCP port shall this node listen?", 9000, true, false);
             ret.Server.DnsHostname = Common.InputString("On which hostname shall this node listen?", "localhost", false);
 
@@ -88,11 +88,11 @@ namespace Kvpbase
             #region Syslog
 
             ret.Syslog = new SettingsLogging();
-            ret.Syslog.ConsoleLogging = 1;
+            ret.Syslog.ConsoleLogging = true;
             ret.Syslog.SyslogServerIp = "127.0.0.1";
             ret.Syslog.SyslogServerPort = 514;
-            ret.Syslog.LogRequests = 0;
-            ret.Syslog.LogResponses = 0;
+            ret.Syslog.LogRequests = false;
+            ret.Syslog.LogResponses = false;
             ret.Syslog.MinimumSeverityLevel = 1;
 
             #endregion
@@ -100,8 +100,8 @@ namespace Kvpbase
             #region REST
 
             ret.Rest = new SettingsRest();
-            ret.Rest.AcceptInvalidCerts = 1;
-            ret.Rest.UseWebProxy = 0;
+            ret.Rest.AcceptInvalidCerts = true;
+            ret.Rest.UseWebProxy = false;
             ret.Rest.WebProxyUrl = "";
 
             #endregion
@@ -186,9 +186,9 @@ namespace Kvpbase
             ret.Name = Common.InputString("What is the name of the site?", "Google", false);
             ret.HttpHostNames = InputHostNames(ret.Name);
             ret.Nodes = InputNodes(ret.Name);
-            ret.LoadBalancingSchema = "roundrobin";
-            ret.HandlingMode = "redirect";
-            ret.AcceptInvalidCerts = 1;
+            ret.BalancingScheme = BalancingScheme.RoundRobin;
+            ret.HandlingMode = HandlingMode.Redirect;
+            ret.AcceptInvalidCerts = true;
 
             List<Host> retList = new List<Host>();
             retList.Add(ret);

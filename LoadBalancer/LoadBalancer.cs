@@ -246,7 +246,7 @@ namespace Kvpbase
 
                 #region Process-Connection
 
-                if (currHost.HandlingMode.Equals("redirect"))
+                if (currHost.HandlingMode == HandlingMode.Redirect)
                 {
                     #region Redirect
                      
@@ -297,7 +297,7 @@ namespace Kvpbase
 
                     #endregion
                 }
-                else if (currHost.HandlingMode.Equals("proxy"))
+                else if (currHost.HandlingMode == HandlingMode.Proxy)
                 {
                     #region Proxy
 

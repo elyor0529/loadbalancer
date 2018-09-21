@@ -87,7 +87,7 @@ namespace Kvpbase
                 }
             }
 
-            if (host.LoadBalancingSchema.Equals("roundrobin"))
+            if (host.BalancingScheme == BalancingScheme.RoundRobin)
             {
                 int maxAttempts = host.Nodes.Count * 5;
 
@@ -110,7 +110,7 @@ namespace Kvpbase
             }
             else
             {
-                Logging.Log(LoggingModule.Severity.Warn, "SelectNodeForHost invalid load-balancing schema: " + host.LoadBalancingSchema);
+                Logging.Log(LoggingModule.Severity.Warn, "SelectNodeForHost invalid load-balancing schema: " + host.BalancingScheme.ToString());
                 return false;
             } 
         }

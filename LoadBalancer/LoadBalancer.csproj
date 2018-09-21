@@ -128,6 +128,8 @@
   <ItemGroup>
     <Compile Include="Classes\Connection.cs" />
     <Compile Include="Classes\ConsoleManager.cs" />
+    <Compile Include="Classes\BalancingScheme.cs" />
+    <Compile Include="Classes\HandlingMode.cs" />
     <Compile Include="Classes\HostManager.cs" />
     <Compile Include="Classes\Host.cs" />
     <Compile Include="Classes\Node.cs" />
@@ -190,11 +192,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-REM These lines are added to support large objects
-REM see http://blogs.msdn.com/b/calvin_hsia/archive/2010/09/27/10068359.aspx
-call "$(DevEnvDir)..\..\vc\vcvarsall.bat" x86
-"$(DevEnvDir)..\..\vc\bin\EditBin.exe" "$(TargetPath)"  /LARGEADDRESSAWARE
-</PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -14,9 +14,9 @@ namespace Kvpbase
         public List<string> HttpHostNames { get; set; }
         public List<Node> Nodes { get; set; }
         public int LastIndex { get; set; }
-        public string LoadBalancingSchema { get; set; } // roundrobin
-        public string HandlingMode { get; set; }        // proxy, redirect
-        public int AcceptInvalidCerts { get; set; }
+        public BalancingScheme BalancingScheme { get; set; } // RoundRobin
+        public HandlingMode HandlingMode { get; set; } // Proxy, Redirect
+        public bool AcceptInvalidCerts { get; set; }
 
         #endregion
 
