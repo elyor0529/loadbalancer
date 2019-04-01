@@ -36,7 +36,7 @@ It is recommended that you use ```redirect``` for ```HandlingMode``` as this wil
         {
           "Hostname": "10.1.1.1",
           "Port": 80,
-          "Ssl": 0,
+          "Ssl": false,
           "HeartbeatUrl": "http://10.1.1.1:80/loopback",
           "PollingIntervalMsec": 2500,
           "MaxFailures": 4,
