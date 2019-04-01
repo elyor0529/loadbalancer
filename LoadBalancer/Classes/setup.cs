@@ -1,16 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Kvpbase
+namespace Kvpbase.Classes
 {
+    /// <summary>
+    /// Setup class for the Loadbalancer.
+    /// </summary>
     public class Setup
     {
+        #region Public-Members
+
+        #endregion
+
+        #region Private-Members
+
+        #endregion
+
         #region Constructors-and-Factories
 
+        /// <summary>
+        /// Instantiate the setup process.
+        /// </summary>
         public Setup()
         {
             RunSetup();
         }
+
+        #endregion
+
+        #region Public-Methods
 
         #endregion
 
@@ -87,13 +105,13 @@ namespace Kvpbase
 
             #region Syslog
 
-            ret.Syslog = new SettingsLogging();
-            ret.Syslog.ConsoleLogging = true;
-            ret.Syslog.SyslogServerIp = "127.0.0.1";
-            ret.Syslog.SyslogServerPort = 514;
-            ret.Syslog.LogRequests = false;
-            ret.Syslog.LogResponses = false;
-            ret.Syslog.MinimumSeverityLevel = 1;
+            ret.Logging = new SettingsLogging();
+            ret.Logging.ConsoleLogging = true;
+            ret.Logging.SyslogServerIp = "127.0.0.1";
+            ret.Logging.SyslogServerPort = 514;
+            ret.Logging.LogRequests = false;
+            ret.Logging.LogResponses = false;
+            ret.Logging.MinimumSeverityLevel = 1;
 
             #endregion
             
@@ -244,7 +262,7 @@ namespace Kvpbase
                 }
 
                 curr.Port = Common.InputInteger("Port?", 80, true, false);
-                curr.Ssl = Common.InputInteger("Ssl [0/1]?", 0, true, true);
+                curr.Ssl = Common.InputBoolean("Ssl?", false);
                 curr.HeartbeatUrl = Common.InputString("Heartbeat URL [full URL, i.e. http://host.mydomain.com:80/api/]?", null, false);
                 curr.PollingIntervalMsec = 2500;
                 curr.MaxFailures = 4;

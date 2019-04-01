@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using SyslogLogging;
 using WatsonWebserver;
 using RestWrapper;
+using Kvpbase.Classes;
 
 namespace Kvpbase
 {
@@ -52,10 +53,10 @@ namespace Kvpbase
             #region Start-Modules
 
             _Logging = new LoggingModule(
-                _Settings.Syslog.SyslogServerIp,
-                _Settings.Syslog.SyslogServerPort,
-                Common.IsTrue(_Settings.Syslog.ConsoleLogging),
-                (LoggingModule.Severity)(_Settings.Syslog.MinimumSeverityLevel),
+                _Settings.Logging.SyslogServerIp,
+                _Settings.Logging.SyslogServerPort,
+                Common.IsTrue(_Settings.Logging.ConsoleLogging),
+                (LoggingModule.Severity)(_Settings.Logging.MinimumSeverityLevel),
                 false,
                 true,
                 true,
@@ -69,8 +70,7 @@ namespace Kvpbase
                 _Settings.Server.DnsHostname,
                 _Settings.Server.Port,
                 Common.IsTrue(_Settings.Server.Ssl),
-                RequestHandler,
-                false);
+                RequestHandler);
 
             _Connections = new ConnectionManager(_Logging);
 
@@ -121,9 +121,9 @@ namespace Kvpbase
             {
                 #region Unauthenticated-APIs
 
-                switch (req.Method.ToLower())
+                switch (req.Method)
                 {
-                    case "get":
+                    case HttpMethod.GET:
                         if (WatsonCommon.UrlEqual(req.RawUrlWithoutQuery, "/_loadbalancer/loopback", false))
                         {
                             resp = new HttpResponse(req, true, 200, null, "application/json", "Hello from LoadBalancer!", false);
@@ -131,9 +131,9 @@ namespace Kvpbase
                         }
                         break;
 
-                    case "put":
-                    case "post":
-                    case "delete":
+                    case HttpMethod.PUT:
+                    case HttpMethod.POST:
+                    case HttpMethod.DELETE:
                     default:
                         break;
                 }
@@ -157,9 +157,9 @@ namespace Kvpbase
 
                         _Logging.Log(LoggingModule.Severity.Info, "RequestHandler use of admin API key detected for: " + req.RawUrlWithoutQuery);
 
-                        switch (req.Method.ToLower())
+                        switch (req.Method)
                         {
-                            case "get":
+                            case HttpMethod.GET:
                                 if (WatsonCommon.UrlEqual(req.RawUrlWithoutQuery, "/_loadbalancer/connections", false))
                                 {
                                     resp = new HttpResponse(req, true, 200, null, "application/json", _Connections.GetActiveConnections(), false);
@@ -179,9 +179,9 @@ namespace Kvpbase
                                 }
                                 break;
                                 
-                            case "put":
-                            case "post":
-                            case "delete":
+                            case HttpMethod.PUT:
+                            case HttpMethod.POST:
+                            case HttpMethod.DELETE:
                             default:
                                 break;
                         }
@@ -277,7 +277,7 @@ namespace Kvpbase
                     RestResponse restResp = RestRequest.SendRequestSafe(
                         redirectUrl,
                         req.ContentType,
-                        req.Method,
+                        req.Method.ToString(),
                         null, null, false, 
                         Common.IsTrue(currHost.AcceptInvalidCerts),
                         requestHeaders,

@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 using SyslogLogging;
 using RestWrapper;
 
-namespace Kvpbase
+namespace Kvpbase.Classes
 {
+    /// <summary>
+    /// Console manager.
+    /// </summary>
     public class ConsoleManager
     {
         #region Public-Members
@@ -26,6 +29,13 @@ namespace Kvpbase
 
         #region Constructors-and-Factories
 
+        /// <summary>
+        /// Instantiate the object.
+        /// </summary>
+        /// <param name="settings">Server settings.</param>
+        /// <param name="conn">Connection manager instance.</param>
+        /// <param name="hosts">Host manager instance.</param>
+        /// <param name="exitApplication">Function to call when exiting the application.</param>
         public ConsoleManager(
             Settings settings,
             ConnectionManager conn,
@@ -50,6 +60,9 @@ namespace Kvpbase
 
         #region Public-Methods
 
+        /// <summary>
+        /// Stop the console manager.
+        /// </summary>
         public void Stop()
         {
             Enabled = false;

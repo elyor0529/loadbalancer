@@ -9,48 +9,20 @@ using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Script.Serialization;
-using Mono.Posix;
-using Mono.Unix;
-using Mono.Unix.Native;
+using System.Threading.Tasks; 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SyslogLogging;
 
-namespace Kvpbase
+namespace Kvpbase.Classes
 {
+    /// <summary>
+    /// Static methods.
+    /// </summary>
     public static class Common
     {
         #region Environment
-
-        public static bool IsAdmin()
-        {
-            int platform = (int)Environment.OSVersion.Platform;
-            if ((platform == 4) || (platform == 6) || (platform == 128))
-            {
-                #region Linux
-
-                // see http://stackoverflow.com/questions/2615997/winforms-console-application-on-mono-how-to-know-it-runs-as-root
-                if (Mono.Unix.Native.Syscall.getuid() == 0) return true;
-
-                #endregion
-            }
-            else
-            {
-                #region Windows
-
-                // see http://stackoverflow.com/questions/11660184/c-sharp-check-if-run-as-administrator
-                var identity = WindowsIdentity.GetCurrent();
-                var principal = new WindowsPrincipal(identity);
-                if (principal.IsInRole(WindowsBuiltInRole.Administrator)) return true;
-
-                #endregion
-            }
-
-            return false;
-        }
-
+         
         public static void ExitApplication(string method, string text, int returnCode)
         {
             Console.WriteLine("---");
@@ -64,25 +36,7 @@ namespace Kvpbase
             Environment.Exit(returnCode);
             return;
         }
-
-        public static string GetPathSeparator(string environment)
-        {
-            if (String.IsNullOrEmpty(environment)) throw new ArgumentNullException(nameof(environment));
-
-            switch (environment)
-            {
-                case "windows":
-                    return @"\";
-
-                case "mac":
-                case "linux":
-                    return "/";
-
-                default:
-                    throw new ArgumentException("Unknown environment: " + environment);
-            }
-        }
-
+         
         #endregion
 
         #region Input
@@ -201,31 +155,7 @@ namespace Kvpbase
         #endregion
 
         #region Directory
-
-        public static bool VerifyDirectoryAccess(string environment, string directory)
-        {
-            if (String.IsNullOrEmpty(directory)) return false;
-
-            switch (environment)
-            {
-                case "linux":
-                    var ufi = new UnixFileInfo(directory);
-                    if (!ufi.CanAccess(AccessModes.F_OK)) return false;
-                    if (!ufi.CanAccess(AccessModes.R_OK)) return false;
-                    if (!ufi.CanAccess(AccessModes.W_OK)) return false;
-                    if (!ufi.CanAccess(AccessModes.X_OK)) return false;
-                    return true;
-
-                case "windows":
-                    DirectorySecurity ds = Directory.GetAccessControl(directory);
-                    return true;
-
-                default:
-                    ExitApplication("Common", "Unknown environment: " + environment, -1);
-                    return false;
-            }
-        }
-
+         
         public static bool CreateDirectory(string dir)
         {
             Directory.CreateDirectory(dir);
@@ -333,89 +263,7 @@ namespace Kvpbase
                 return false;
             }
         }
-
-        public static bool WalkDirectory(
-            string environment,
-            int depth,
-            string directory,
-            bool prependFilename,
-            out List<string> subdirectories,
-            out List<string> files,
-            out long bytes,
-            bool recursive)
-        {
-            subdirectories = new List<string>();
-            files = new List<string>();
-            bytes = 0;
-
-            try
-            {
-                subdirectories = Common.GetSubdirectoryList(directory, false);
-                files = Common.GetFileList(environment, directory, prependFilename);
-
-                if (files != null && files.Count > 0)
-                {
-                    foreach (String currFile in files)
-                    {
-                        FileInfo fi = new FileInfo(currFile);
-                        bytes += fi.Length;
-                    }
-                }
-
-                List<string> queueSubdirectories = new List<string>();
-                List<string> queueFiles = new List<string>();
-                long queueBytes = 0;
-
-                if (recursive)
-                {
-                    if (subdirectories == null || subdirectories.Count < 1) return true;
-                    depth += 2;
-
-                    foreach (string curr in subdirectories)
-                    {
-                        List<string> childSubdirectories = new List<string>();
-                        List<string> childFiles = new List<string>();
-                        long childBytes = 0;
-
-                        WalkDirectory(
-                            environment,
-                            depth,
-                            curr,
-                            prependFilename,
-                            out childSubdirectories,
-                            out childFiles,
-                            out childBytes,
-                            true);
-
-                        if (childSubdirectories != null)
-                            foreach (string childSubdir in childSubdirectories)
-                                queueSubdirectories.Add(childSubdir);
-
-                        if (childFiles != null)
-                            foreach (string childFile in childFiles)
-                                queueFiles.Add(childFile);
-
-                        queueBytes += childBytes;
-                    }
-                }
-
-                if (queueSubdirectories != null)
-                    foreach (string queueSubdir in queueSubdirectories)
-                        subdirectories.Add(queueSubdir);
-
-                if (queueFiles != null)
-                    foreach (string queueFile in queueFiles)
-                        files.Add(queueFile);
-
-                bytes += queueBytes;
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
+         
         public static bool DirectoryStatistics(
             DirectoryInfo dirinfo,
             bool recursive,
@@ -506,37 +354,7 @@ namespace Kvpbase
                 return false;
             }
         }
-
-        public static List<string> GetFileList(string environment, string directory, bool prependFilename)
-        {
-            try
-            {
-                /*
-                 * 
-                 * Returns only the filename unless prepend_filename is set
-                 * If prepend_filename is set, directory is prepended
-                 * 
-                 */
-
-                string separator = GetPathSeparator(environment);
-                DirectoryInfo info = new DirectoryInfo(directory);
-                FileInfo[] files = info.GetFiles().OrderBy(p => p.CreationTime).ToArray();
-                List<string> fileList = new List<string>();
-
-                foreach (FileInfo file in files)
-                {
-                    if (prependFilename) fileList.Add(directory + separator + file.Name);
-                    else fileList.Add(file.Name);
-                }
-
-                return fileList;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
+         
         public static bool WriteFile(string filename, string content, bool append)
         {
             using (StreamWriter writer = new StreamWriter(filename, append))
@@ -964,16 +782,7 @@ namespace Kvpbase
                 return default(T);
             }
         }
-
-        public static string SerializeJsonBuiltIn(object obj)
-        {
-            if (obj == null) return null;
-
-            JavaScriptSerializer ser = new JavaScriptSerializer();
-            ser.MaxJsonLength = Int32.MaxValue;
-            return ser.Serialize(obj);
-        }
-
+         
         public static string SerializeJson(object obj)
         {
             if (obj == null) return null;
@@ -988,33 +797,7 @@ namespace Kvpbase
 
             return json;
         }
-
-        public static T DeserializeJsonBuiltIn<T>(string json)
-        {
-            if (String.IsNullOrEmpty(json)) throw new ArgumentNullException(nameof(json));
-
-            try
-            {
-                JavaScriptSerializer ser = new JavaScriptSerializer();
-                ser.MaxJsonLength = Int32.MaxValue;
-                return ser.Deserialize<T>(json);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("");
-                Console.WriteLine("Exception while deserializing:");
-                Console.WriteLine(json);
-                Console.WriteLine("");
-                throw e;
-            }
-        }
-
-        public static T DeserializeJsonBuiltIn<T>(byte[] data)
-        {
-            if (data == null || data.Length < 1) throw new ArgumentNullException(nameof(data));
-            return DeserializeJsonBuiltIn<T>(Encoding.UTF8.GetString(data));
-        }
-
+         
         public static T DeserializeJson<T>(string json)
         {
             if (String.IsNullOrEmpty(json)) throw new ArgumentNullException(nameof(json));

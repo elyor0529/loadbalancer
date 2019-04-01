@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 using SyslogLogging;
 using RestWrapper;
 
-namespace Kvpbase
+namespace Kvpbase.Classes
 {
+    /// <summary>
+    /// Host manager.
+    /// </summary>
     public class HostManager
     {
         #region Public-Members
@@ -24,6 +27,11 @@ namespace Kvpbase
 
         #region Constructors-and-Factories
 
+        /// <summary>
+        /// Instantiate the object.
+        /// </summary>
+        /// <param name="logging">Logging instance.</param>
+        /// <param name="hosts">List of Hosts</param>
         public HostManager(LoggingModule logging, List<Host> hosts)
         {
             if (logging == null) throw new ArgumentNullException(nameof(logging));
@@ -40,6 +48,10 @@ namespace Kvpbase
 
         #region Public-Members
 
+        /// <summary>
+        /// Retrieve list of hosts.
+        /// </summary>
+        /// <returns>List of Host objects.</returns>
         public List<Host> Get()
         {
             lock (HostsLock)
@@ -48,6 +60,11 @@ namespace Kvpbase
             }
         }
 
+        /// <summary>
+        /// Retrieve a Host by name.
+        /// </summary>
+        /// <param name="name">Name of the Host.</param>
+        /// <returns>Host object.</returns>
         public Host GetHostByName(string name)
         {
             if (String.IsNullOrEmpty(name))
@@ -66,6 +83,13 @@ namespace Kvpbase
             return null;
         }
 
+        /// <summary>
+        /// Select a node to service a client's request for a given host.
+        /// </summary>
+        /// <param name="hostName">Host name.</param>
+        /// <param name="host">Host.</param>
+        /// <param name="node">Node.</param>
+        /// <returns>True if successful.</returns>
         public bool SelectNodeForHost(string hostName, out Host host, out Node node)
         {
             host = null;
