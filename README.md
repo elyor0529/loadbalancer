@@ -67,7 +67,7 @@ It is recommended that you use ```redirect``` for ```HandlingMode``` as this wil
     "AdminApiKeyHeader": "x-api-key",
     "AdminApiKey": "admin"
   },
-  "Syslog": {
+  "Logging": {
     "SyslogServerIp": "127.0.0.1",
     "SyslogServerPort": 514,
     "MinimumSeverityLevel": 1,
